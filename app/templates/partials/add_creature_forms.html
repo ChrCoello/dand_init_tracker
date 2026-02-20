@@ -1,0 +1,30 @@
+<div id="add-creature-forms">
+    <form hx-post="/encounter/add-pc"
+          hx-target="#encounter-creatures"
+          hx-swap="innerHTML">
+        <fieldset role="group">
+            <select name="pc_name" required {% if not pc_library %}disabled{% endif %}>
+                <option value="">{% if pc_library %}Add PC...{% else %}No PCs — upload a PDF first{% endif %}</option>
+                {% for name in pc_library %}
+                <option value="{{ name }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" {% if not pc_library %}disabled{% endif %}>Add</button>
+        </fieldset>
+    </form>
+
+    <form hx-post="/encounter/add-monster"
+          hx-target="#encounter-creatures"
+          hx-swap="innerHTML">
+        <fieldset role="group">
+            <select name="monster_name" required {% if not monster_library %}disabled{% endif %}>
+                <option value="">{% if monster_library %}Add Monster...{% else %}No monsters — upload a Markdown file first{% endif %}</option>
+                {% for name in monster_library %}
+                <option value="{{ name }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+            <input type="number" name="count" value="1" min="1" max="20" style="width:5rem">
+            <button type="submit" {% if not monster_library %}disabled{% endif %}>Add</button>
+        </fieldset>
+    </form>
+</div>
