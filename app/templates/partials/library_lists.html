@@ -1,0 +1,59 @@
+{% if pc_library %}
+<h4>PCs</h4>
+<div class="library-grid">
+    {% for name, pc in pc_library.items() %}
+    <article>
+        <header>
+            <strong>{{ pc.name }}</strong>
+            <span class="type-badge pc">PC</span>
+        </header>
+        <div class="stat-row">
+            <span>AC {{ pc.armor_class }}</span>
+            <span>HP {{ pc.max_hp }}</span>
+            <span>Init +{{ pc.initiative_modifier }}</span>
+            <span>PP {{ pc.passive_perception }}</span>
+        </div>
+        <div class="stat-row">
+            <span>STR {{ pc.abilities.strength }}</span>
+            <span>DEX {{ pc.abilities.dexterity }}</span>
+            <span>CON {{ pc.abilities.constitution }}</span>
+            <span>INT {{ pc.abilities.intelligence }}</span>
+            <span>WIS {{ pc.abilities.wisdom }}</span>
+            <span>CHA {{ pc.abilities.charisma }}</span>
+        </div>
+    </article>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if monster_library %}
+<h4>Monsters</h4>
+<div class="library-grid">
+    {% for name, monster in monster_library.items() %}
+    <article>
+        <header>
+            <strong>{{ monster.name }}</strong>
+            <span class="type-badge monster">CR {{ monster.challenge_rating }}</span>
+        </header>
+        <div class="stat-row">
+            <span>AC {{ monster.armor_class }}</span>
+            <span>HP {{ monster.max_hp }}</span>
+            <span>Init +{{ monster.initiative_modifier }}</span>
+            <span>PP {{ monster.passive_perception }}</span>
+        </div>
+        <div class="stat-row">
+            <span>STR {{ monster.abilities.strength }}</span>
+            <span>DEX {{ monster.abilities.dexterity }}</span>
+            <span>CON {{ monster.abilities.constitution }}</span>
+            <span>INT {{ monster.abilities.intelligence }}</span>
+            <span>WIS {{ monster.abilities.wisdom }}</span>
+            <span>CHA {{ monster.abilities.charisma }}</span>
+        </div>
+    </article>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if not pc_library and not monster_library %}
+<p><em>No creatures loaded. Upload PDFs or markdown stat blocks above.</em></p>
+{% endif %}
