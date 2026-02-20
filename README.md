@@ -4,8 +4,8 @@ A browser-based combat tracker for Dungeon Masters running D&D 5e sessions. Mana
 
 ## Features
 
-- **Import PCs** from fillable PDF character sheets (WotC / TWC format)
-- **Import monsters** from markdown stat block files
+- **Auto-load PCs & monsters** from markdown stat blocks in `assets/pcs/` and `assets/monsters/`
+- **Monster descriptions** — annotate individual monsters (e.g. "the one under the table") to tell multiples apart
 - **Initiative modal** — enter each PC's d20 roll, monsters are auto-rolled
 - **Combat tracker** — initiative-ordered cards with HP bars, damage/heal/temp HP controls
 - **Death saves** — appear automatically when a PC drops to 0 HP
@@ -27,9 +27,9 @@ Open [http://localhost:8000](http://localhost:8000).
 
 ## Usage
 
-1. **Upload PC sheets** — drop in fillable PDF character sheets (like the included `assets/thomas_aurelius_cs.pdf`)
-2. **Add monsters** — the app auto-loads markdown stat blocks from `assets/` on startup. Upload more via the UI
-3. **Build encounter** — pick PCs and monsters (with count, e.g. "Wolf x3")
+1. **Add PCs** — place markdown stat blocks in `assets/pcs/` (auto-loaded on startup). See [Converting PDF sheets](#adding-pcs) below
+2. **Add monsters** — place markdown stat blocks in `assets/monsters/` (auto-loaded on startup)
+3. **Build encounter** — pick PCs and monsters (with count, e.g. "Wolf x3"), add descriptions to tell multiples apart
 4. **Roll initiative** — enter each PC's d20 roll in the modal, monsters roll automatically
 5. **Run combat** — advance turns, apply damage/healing, track death saves
 
@@ -39,13 +39,38 @@ The `assets/` folder includes example files to get started:
 
 | File | Description |
 |------|-------------|
-| `thomas_aurelius_cs.pdf` | Level 1 Human Wizard (fillable PDF) |
-| `goblin_stats.md` | Goblin stat block (CR 1/4) |
-| `wolf_stats.md` | Wolf stat block (CR 1/4) |
+| `assets/pcs/thomas_aurelius_lvl1_stats.md` | Level 1 Human Wizard |
+| `assets/pcs/penda_of_mercia_lvl2_stats.md` | Level 2 Fighter |
+| `assets/monsters/goblin_stats.md` | Goblin stat block (CR 1/4) |
+| `assets/monsters/wolf_stats.md` | Wolf stat block (CR 1/4) |
+
+When a character has multiple level files (e.g. `penda_of_mercia_lvl1_stats.md` and `penda_of_mercia_lvl2_stats.md`), only the highest level is loaded.
+
+## Adding PCs
+
+Create a markdown file and place it in `assets/pcs/`:
+
+```markdown
+## Character Name
+
+**Class:** Wizard 1
+**Armor Class:** 12
+**Hit Points:** 8
+**Speed:** 30 ft.
+
+| STR | DEX | CON | INT | WIS | CHA |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| 9 (-1) | 14 (+2) | 14 (+2) | 18 (+4) | 10 (+0) | 10 (+0) |
+
+**Initiative Modifier:** +2
+**Passive Perception:** 12
+```
+
+To convert an existing PDF character sheet, see the conversion prompt in [`docs/pc_conversion_prompt.md`](docs/pc_conversion_prompt.md).
 
 ## Adding Monsters
 
-Create a markdown file following this format and place it in `assets/` (loaded on startup) or upload via the UI:
+Create a markdown file following this format and place it in `assets/monsters/`:
 
 ```markdown
 ## Monster Name
