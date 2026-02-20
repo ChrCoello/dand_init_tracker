@@ -72,11 +72,11 @@ def parse_monster_md(text: str) -> Creature:
     )
 
 
-def load_all_monsters(assets_dir: Path) -> None:
-    """Load all .md files from assets directory into monster library."""
+def load_all_monsters(monsters_dir: Path) -> None:
+    """Load all .md files from monsters directory into monster library."""
     from app import state
 
-    for md_file in assets_dir.glob("*_stats.md"):
+    for md_file in monsters_dir.glob("*_stats.md"):
         text = md_file.read_text()
         creature = parse_monster_md(text)
         state.monster_library[creature.name] = creature
