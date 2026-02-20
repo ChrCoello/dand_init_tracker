@@ -1,3 +1,28 @@
+/* Theme overrides — warm neutral palette */
+[data-theme="dark"] {
+    --pico-primary: #b8a88a;
+    --pico-primary-hover: #cbbda1;
+    --pico-primary-focus: rgba(184, 168, 138, 0.15);
+    --pico-primary-inverse: #1a1a1e;
+    --pico-primary-background: #b8a88a;
+    --pico-primary-hover-background: #cbbda1;
+    --pico-primary-border: #b8a88a;
+    --pico-primary-hover-border: #cbbda1;
+    --pico-contrast: #d5d0c8;
+    --pico-contrast-hover: #e8e4dc;
+    --pico-contrast-background: #d5d0c8;
+    --pico-contrast-hover-background: #e8e4dc;
+    --pico-contrast-border: #d5d0c8;
+    --pico-contrast-hover-border: #e8e4dc;
+    --pico-contrast-inverse: #1a1a1e;
+    --pico-background-color: #1a1a1e;
+    --pico-card-background-color: #242428;
+    --pico-card-sectioning-background-color: #2a2a2f;
+    --pico-color: #d5d0c8;
+    --pico-muted-color: #8a8478;
+    --pico-muted-border-color: #3a3a3f;
+}
+
 /* HP bar colors */
 .hp-bar {
     height: 0.5rem;
@@ -12,14 +37,14 @@
     transition: width 0.3s ease;
 }
 
-.hp-bar-fill.hp-high { background: #2ecc40; }
+.hp-bar-fill.hp-high { background: #1a8a2a; }
 .hp-bar-fill.hp-mid { background: #ff851b; }
 .hp-bar-fill.hp-low { background: #ff4136; }
 
 /* Active turn highlight */
 .creature-card.active-turn {
-    border-left: 4px solid var(--pico-primary);
-    background: var(--pico-primary-focus);
+    border-left: 4px solid #c4a84d;
+    background: rgba(196, 168, 77, 0.08);
 }
 
 .creature-card {
@@ -142,8 +167,8 @@
     text-transform: uppercase;
 }
 
-.type-badge.pc { background: #0074d9; color: white; }
-.type-badge.monster { background: #85144b; color: white; }
+.type-badge.pc { background: #7a9ab8; color: white; }
+.type-badge.monster { background: #6b3a4a; color: #ddd; }
 
 /* Library cards */
 .library-grid {

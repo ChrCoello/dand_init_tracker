@@ -1,11 +1,11 @@
 <!-- Turn controls -->
 <div class="turn-controls">
     <button class="outline" hx-post="/encounter/prev-turn" hx-target="#combat-tracker" hx-swap="innerHTML">
-        &#9664; Prev
+        Prev
     </button>
     <span class="round-display">Round {{ encounter.round_number }}</span>
     <button hx-post="/encounter/next-turn" hx-target="#combat-tracker" hx-swap="innerHTML">
-        Next &#9654;
+        Next
     </button>
     <button class="outline secondary" hx-post="/encounter/reset" hx-target="main" hx-swap="innerHTML"
             hx-confirm="End combat and reset encounter?">
