@@ -9,6 +9,7 @@
     <thead>
         <tr>
             <th>Name</th>
+            <th>Description</th>
             <th>Type</th>
             <th>AC</th>
             <th>HP</th>
@@ -20,6 +21,19 @@
         {% for creature in encounter.creatures %}
         <tr>
             <td>{{ creature.name }}</td>
+            <td>
+                {% if creature.creature_type.value == "MONSTER" %}
+                <input type="text"
+                       name="description"
+                       value="{{ creature.description }}"
+                       placeholder="e.g. the one under the table"
+                       hx-post="/encounter/description/{{ creature.id }}"
+                       hx-trigger="blur changed, keydown[key=='Enter']"
+                       hx-target="#encounter-creatures"
+                       hx-swap="innerHTML"
+                       style="margin:0;padding:0.25rem;font-size:0.85rem">
+                {% endif %}
+            </td>
             <td><span class="type-badge {{ creature.creature_type.value|lower }}">{{ creature.creature_type.value }}</span></td>
             <td>{{ creature.armor_class }}</td>
             <td>{{ creature.max_hp }}</td>

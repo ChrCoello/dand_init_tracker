@@ -8,6 +8,9 @@
             {% endif %}
             {{ creature.name }}
             <span class="type-badge {{ creature.creature_type.value|lower }}">{{ creature.creature_type.value }}</span>
+            {% if creature.description %}
+            <span class="creature-description" style="font-size:0.8rem;font-weight:normal;opacity:0.7;font-style:italic;margin-left:0.5rem">{{ creature.description }}</span>
+            {% endif %}
         </div>
         <div class="creature-hp">
             <strong>{{ creature.current_hp }}/{{ creature.max_hp }} HP</strong>
