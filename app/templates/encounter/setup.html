@@ -10,12 +10,12 @@
 
         <!-- Upload PC -->
         <details open>
-            <summary>Upload PC (PDF)</summary>
+            <summary>Upload PC (Markdown)</summary>
             <form hx-post="/creatures/upload-pc"
                   hx-target="#library-lists"
                   hx-encoding="multipart/form-data"
                   hx-swap="innerHTML">
-                <input type="file" name="file" accept=".pdf" required>
+                <input type="file" name="file" accept=".md" required>
                 <button type="submit">Upload</button>
             </form>
         </details>
@@ -50,7 +50,4 @@
     </div>
 </div>
 
-{% if not pc_library %}
-    {% include "partials/campaign_setup_modal.html" %}
-{% endif %}
 {% endblock %}
