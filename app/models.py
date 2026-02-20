@@ -40,6 +40,7 @@ class Creature:
     challenge_rating: str = ""
     death_save_successes: int = 0
     death_save_failures: int = 0
+    description: str = ""
     traits: str = ""
     actions: str = ""
     id: str = field(default_factory=lambda: uuid.uuid4().hex[:8])

@@ -76,6 +76,29 @@ async def remove_creature(request: Request, creature_id: str):
     )
 
 
+@router.post("/encounter/description/{creature_id}")
+async def set_description(
+    request: Request, creature_id: str, description: str = Form(""),
+):
+    """Set a free-text description on a creature."""
+    creature = state.encounter.get_creature(creature_id)
+    if creature:
+        creature.description = description
+    if state.encounter.is_active:
+        return templates.TemplateResponse(
+            "partials/creature_card.html",
+            {
+                "request": request,
+                "creature": creature,
+                "encounter": state.encounter,
+            },
+        )
+    return templates.TemplateResponse(
+        "partials/encounter_creatures.html",
+        {"request": request, "encounter": state.encounter},
+    )
+
+
 @router.post("/encounter/roll-initiative")
 async def roll_initiative(request: Request):
     """Show the initiative modal for PC rolls."""
