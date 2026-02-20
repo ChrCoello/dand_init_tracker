@@ -28,6 +28,7 @@ class AbilityScores:
 class Creature:
     name: str
     creature_type: CreatureType
+    description: str = ""
     armor_class: int = 10
     max_hp: int = 1
     current_hp: int = 0

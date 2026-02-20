@@ -59,6 +59,20 @@ async def add_monster(
     )
 
 
+@router.post("/encounter/description/{creature_id}")
+async def update_description(
+    request: Request, creature_id: str, description: str = Form("")
+):
+    """Update a creature's description."""
+    creature = state.encounter.get_creature(creature_id)
+    if creature and creature.creature_type == CreatureType.MONSTER:
+        creature.description = description
+    return templates.TemplateResponse(
+        "partials/encounter_creatures.html",
+        {"request": request, "encounter": state.encounter},
+    )
+
+
 @router.post("/encounter/remove/{creature_id}")
 async def remove_creature(request: Request, creature_id: str):
     """Remove a creature from the encounter."""
