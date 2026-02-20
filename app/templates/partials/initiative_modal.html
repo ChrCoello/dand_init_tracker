@@ -1,0 +1,36 @@
+<dialog id="initiative-modal" open>
+    <article style="max-width:500px">
+        <header>
+            <h3>Roll Initiative</h3>
+            <p>Enter each PC's d20 roll. Monster initiatives are rolled automatically.</p>
+        </header>
+        <form hx-post="/encounter/start-combat" hx-target="main" hx-swap="innerHTML">
+            {% for creature in encounter.creatures %}
+                {% if creature.creature_type.value == "PC" %}
+                <fieldset>
+                    <label>
+                        <strong>{{ creature.name }}</strong>
+                        <small>(Init modifier: {{ "%+d"|format(creature.initiative_modifier) }})</small>
+                    </label>
+                    <div style="display:flex;gap:0.5rem;align-items:center">
+                        <input type="number" name="roll_{{ creature.id }}" min="1" max="20"
+                               placeholder="d20 roll" required style="margin:0">
+                        <label style="margin:0;white-space:nowrap">
+                            <input type="checkbox" name="total_{{ creature.id }}" value="1" role="switch" style="margin:0">
+                            Already includes modifier
+                        </label>
+                    </div>
+                </fieldset>
+                {% endif %}
+            {% endfor %}
+
+            <footer style="display:flex;gap:0.5rem;justify-content:flex-end">
+                <button type="button" class="outline secondary"
+                        onclick="document.getElementById('initiative-modal').close(); document.getElementById('initiative-modal').remove();">
+                    Cancel
+                </button>
+                <button type="submit" class="contrast">Start Combat</button>
+            </footer>
+        </form>
+    </article>
+</dialog>

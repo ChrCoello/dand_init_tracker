@@ -1,0 +1,51 @@
+{% set has_pc = namespace(val=false) %}
+{% set has_monster = namespace(val=false) %}
+{% for c in encounter.creatures %}
+    {% if c.creature_type.value == "PC" %}{% set has_pc.val = true %}{% endif %}
+    {% if c.creature_type.value == "MONSTER" %}{% set has_monster.val = true %}{% endif %}
+{% endfor %}
+{% if encounter.creatures %}
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>AC</th>
+            <th>HP</th>
+            <th>Init Mod</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for creature in encounter.creatures %}
+        <tr>
+            <td>{{ creature.name }}</td>
+            <td><span class="type-badge {{ creature.creature_type.value|lower }}">{{ creature.creature_type.value }}</span></td>
+            <td>{{ creature.armor_class }}</td>
+            <td>{{ creature.max_hp }}</td>
+            <td>{{ "%+d"|format(creature.initiative_modifier) }}</td>
+            <td>
+                <button class="outline secondary"
+                        hx-post="/encounter/remove/{{ creature.id }}"
+                        hx-target="#encounter-creatures"
+                        hx-swap="innerHTML"
+                        style="padding:0.25rem 0.5rem;margin:0">
+                    &#10005;
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if has_pc.val and has_monster.val %}
+<button hx-post="/encounter/roll-initiative"
+        hx-target="body"
+        hx-swap="beforeend"
+        class="contrast">
+    &#127922; Roll Initiative &amp; Start Combat
+</button>
+{% endif %}
+{% else %}
+<p><em>No creatures added yet. Use the dropdowns above to add PCs and monsters.</em></p>
+{% endif %}

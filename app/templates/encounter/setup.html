@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Encounter Setup - D&amp;D Initiative Tracker{% endblock %}
+{% block content %}
+<h2>Encounter Setup</h2>
+
+<div class="grid">
+    <!-- Left: Libraries -->
+    <div>
+        <h3>Creature Libraries</h3>
+
+        <!-- Upload PC -->
+        <details open>
+            <summary>Upload PC (PDF)</summary>
+            <form hx-post="/creatures/upload-pc"
+                  hx-target="#library-lists"
+                  hx-encoding="multipart/form-data"
+                  hx-swap="innerHTML">
+                <input type="file" name="file" accept=".pdf" required>
+                <button type="submit">Upload</button>
+            </form>
+        </details>
+
+        <!-- Upload Monster -->
+        <details>
+            <summary>Upload Monster (Markdown)</summary>
+            <form hx-post="/creatures/upload-monster"
+                  hx-target="#library-lists"
+                  hx-encoding="multipart/form-data"
+                  hx-swap="innerHTML">
+                <input type="file" name="file" accept=".md" required>
+                <button type="submit">Upload</button>
+            </form>
+        </details>
+
+        <div id="library-lists">
+            {% include "partials/library_lists.html" %}
+        </div>
+    </div>
+
+    <!-- Right: Current Encounter -->
+    <div>
+        <h3>Current Encounter</h3>
+
+        <!-- Add from libraries -->
+        {% if pc_library %}
+        <form hx-post="/encounter/add-pc"
+              hx-target="#encounter-creatures"
+              hx-swap="innerHTML">
+            <fieldset role="group">
+                <select name="pc_name" required>
+                    <option value="">Add PC...</option>
+                    {% for name in pc_library %}
+                    <option value="{{ name }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Add</button>
+            </fieldset>
+        </form>
+        {% endif %}
+
+        {% if monster_library %}
+        <form hx-post="/encounter/add-monster"
+              hx-target="#encounter-creatures"
+              hx-swap="innerHTML">
+            <fieldset role="group">
+                <select name="monster_name" required>
+                    <option value="">Add Monster...</option>
+                    {% for name in monster_library %}
+                    <option value="{{ name }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="number" name="count" value="1" min="1" max="20" style="width:5rem">
+                <button type="submit">Add</button>
+            </fieldset>
+        </form>
+        {% endif %}
+
+        <div id="encounter-creatures">
+            {% include "partials/encounter_creatures.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}

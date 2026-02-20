@@ -1,0 +1,119 @@
+{% set is_current = encounter.current_creature_id == creature.id %}
+{% set hp_pct = creature.hp_percentage %}
+<div class="creature-card {{ 'active-turn' if is_current }} {{ 'unconscious' if creature.is_unconscious }} {{ 'dead' if creature.is_dead }}">
+    <div class="creature-header">
+        <div class="creature-name">
+            {% if creature.initiative_roll is not none %}
+            <span class="initiative-badge">{{ creature.initiative_roll }}</span>
+            {% endif %}
+            {{ creature.name }}
+            <span class="type-badge {{ creature.creature_type.value|lower }}">{{ creature.creature_type.value }}</span>
+        </div>
+        <div class="creature-hp">
+            <strong>{{ creature.current_hp }}/{{ creature.max_hp }} HP</strong>
+            {% if creature.temp_hp > 0 %}
+            <small>(+{{ creature.temp_hp }} temp)</small>
+            {% endif %}
+            &nbsp; AC {{ creature.armor_class }}
+        </div>
+    </div>
+
+    <!-- HP Bar -->
+    <div class="hp-bar">
+        <div class="hp-bar-fill {{ 'hp-high' if hp_pct > 50 else ('hp-mid' if hp_pct > 25 else 'hp-low') }}"
+             style="width: {{ hp_pct }}%"></div>
+    </div>
+
+    <!-- Stat row -->
+    <div class="stat-row" style="margin-top:0.25rem">
+        <span>STR {{ creature.abilities.strength }}</span>
+        <span>DEX {{ creature.abilities.dexterity }}</span>
+        <span>CON {{ creature.abilities.constitution }}</span>
+        <span>INT {{ creature.abilities.intelligence }}</span>
+        <span>WIS {{ creature.abilities.wisdom }}</span>
+        <span>CHA {{ creature.abilities.charisma }}</span>
+        <span>PP {{ creature.passive_perception }}</span>
+        <span>Speed {{ creature.speed }}</span>
+    </div>
+
+    <!-- HP Controls -->
+    <div class="hp-controls" style="margin-top:0.5rem">
+        <form hx-post="/encounter/damage/{{ creature.id }}" hx-target="#creature-{{ creature.id }}" hx-swap="innerHTML" style="display:flex;gap:0.25rem;margin:0">
+            <input type="number" name="amount" min="0" value="0" placeholder="dmg">
+            <button type="submit" class="outline" style="background:rgba(255,65,54,0.15)">Damage</button>
+        </form>
+        <form hx-post="/encounter/heal/{{ creature.id }}" hx-target="#creature-{{ creature.id }}" hx-swap="innerHTML" style="display:flex;gap:0.25rem;margin:0">
+            <input type="number" name="amount" min="0" value="0" placeholder="heal">
+            <button type="submit" class="outline" style="background:rgba(46,204,64,0.15)">Heal</button>
+        </form>
+        <form hx-post="/encounter/temp-hp/{{ creature.id }}" hx-target="#creature-{{ creature.id }}" hx-swap="innerHTML" style="display:flex;gap:0.25rem;margin:0">
+            <input type="number" name="amount" min="0" value="0" placeholder="temp">
+            <button type="submit" class="outline">Temp</button>
+        </form>
+    </div>
+
+    <!-- Death Saves (PCs at 0 HP) -->
+    {% if creature.creature_type.value == "PC" and creature.current_hp <= 0 and not creature.is_dead %}
+    <div class="death-saves">
+        <span>Death Saves:</span>
+        <span>
+            Successes:
+            {% for i in range(3) %}
+            <form style="display:inline;margin:0"
+                  hx-post="/encounter/death-save/{{ creature.id }}"
+                  hx-target="#creature-{{ creature.id }}"
+                  hx-swap="innerHTML">
+                <input type="hidden" name="save_type" value="success">
+                <input type="hidden" name="value" value="{{ i + 1 if creature.death_save_successes <= i else i }}">
+                <button type="submit" style="padding:0.1rem 0.3rem;margin:0;font-size:0.75rem;width:auto;display:inline"
+                        class="{{ 'contrast' if creature.death_save_successes > i else 'outline' }}">
+                    &#10003;
+                </button>
+            </form>
+            {% endfor %}
+        </span>
+        <span>
+            Failures:
+            {% for i in range(3) %}
+            <form style="display:inline;margin:0"
+                  hx-post="/encounter/death-save/{{ creature.id }}"
+                  hx-target="#creature-{{ creature.id }}"
+                  hx-swap="innerHTML">
+                <input type="hidden" name="save_type" value="failure">
+                <input type="hidden" name="value" value="{{ i + 1 if creature.death_save_failures <= i else i }}">
+                <button type="submit" style="padding:0.1rem 0.3rem;margin:0;font-size:0.75rem;width:auto;display:inline"
+                        class="{{ 'contrast' if creature.death_save_failures > i else 'outline' }}">
+                    &#10007;
+                </button>
+            </form>
+            {% endfor %}
+        </span>
+    </div>
+    {% endif %}
+
+    <!-- Initiative override -->
+    {% if encounter.is_active %}
+    <details class="creature-details">
+        <summary>Details & Options</summary>
+        {% if creature.traits %}
+        <p><strong>Traits:</strong> {{ creature.traits }}</p>
+        {% endif %}
+        {% if creature.actions %}
+        <p><strong>Actions:</strong> {{ creature.actions }}</p>
+        {% endif %}
+        <form hx-post="/encounter/set-initiative/{{ creature.id }}" hx-target="#combat-tracker" hx-swap="innerHTML"
+              style="display:flex;gap:0.25rem;align-items:center;margin-top:0.5rem">
+            <label style="margin:0;white-space:nowrap">Set Initiative:</label>
+            <input type="number" name="value" value="{{ creature.initiative_roll or 0 }}" style="width:5rem;margin:0;padding:0.25rem">
+            <button type="submit" class="outline" style="padding:0.25rem 0.5rem;margin:0">Set</button>
+        </form>
+        <button class="outline secondary" style="padding:0.25rem 0.5rem;margin-top:0.25rem"
+                hx-post="/encounter/remove/{{ creature.id }}"
+                hx-target="#combat-tracker"
+                hx-swap="innerHTML"
+                hx-confirm="Remove {{ creature.name }} from combat?">
+            Remove from Combat
+        </button>
+    </details>
+    {% endif %}
+</div>
