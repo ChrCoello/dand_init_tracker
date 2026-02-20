@@ -39,6 +39,29 @@ async def upload_pc(request: Request, file: UploadFile):
     )
 
 
+@router.post("/upload-pc-modal")
+async def upload_pc_modal(request: Request, file: UploadFile):
+    """Upload a PC character sheet PDF (from the campaign setup modal)."""
+    content = await file.read()
+    with NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
+        tmp.write(content)
+        tmp_path = tmp.name
+
+    try:
+        creature = parse_character_pdf(tmp_path)
+        state.pc_library[creature.name] = creature
+    finally:
+        Path(tmp_path).unlink(missing_ok=True)
+
+    return templates.TemplateResponse(
+        "partials/campaign_setup_content.html",
+        {
+            "request": request,
+            "pc_library": state.pc_library,
+        },
+    )
+
+
 @router.post("/upload-monster")
 async def upload_monster(request: Request, file: UploadFile):
     """Upload a monster stat block markdown file."""

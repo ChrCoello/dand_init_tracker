@@ -42,42 +42,15 @@
         <h3>Current Encounter</h3>
 
         <!-- Add from libraries -->
-        {% if pc_library %}
-        <form hx-post="/encounter/add-pc"
-              hx-target="#encounter-creatures"
-              hx-swap="innerHTML">
-            <fieldset role="group">
-                <select name="pc_name" required>
-                    <option value="">Add PC...</option>
-                    {% for name in pc_library %}
-                    <option value="{{ name }}">{{ name }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Add</button>
-            </fieldset>
-        </form>
-        {% endif %}
-
-        {% if monster_library %}
-        <form hx-post="/encounter/add-monster"
-              hx-target="#encounter-creatures"
-              hx-swap="innerHTML">
-            <fieldset role="group">
-                <select name="monster_name" required>
-                    <option value="">Add Monster...</option>
-                    {% for name in monster_library %}
-                    <option value="{{ name }}">{{ name }}</option>
-                    {% endfor %}
-                </select>
-                <input type="number" name="count" value="1" min="1" max="20" style="width:5rem">
-                <button type="submit">Add</button>
-            </fieldset>
-        </form>
-        {% endif %}
+        {% include "partials/add_creature_forms.html" %}
 
         <div id="encounter-creatures">
             {% include "partials/encounter_creatures.html" %}
         </div>
     </div>
 </div>
+
+{% if not pc_library %}
+    {% include "partials/campaign_setup_modal.html" %}
+{% endif %}
 {% endblock %}
